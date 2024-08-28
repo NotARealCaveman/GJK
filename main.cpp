@@ -26,13 +26,4 @@ int main()
 	const MFbool objectsSeparated{ GJK(boundingSphere.center,hull,simplex, closestPoint,distanceSquared) };
 
 	DLOG({ CONSOLE_BG_CYAN,CONSOLE_BLACK, CONSOLE_BOLD, CONSOLE_BLINK }, "objectsSeparated:", objectsSeparated, "closestPoint:", closestPoint, "distanceSquared:", distanceSquared);
-
-	if (!objectsSeparated);
-		//handle deep contact
-	if (distanceSquared > boundingSphere.radius * boundingSphere.radius);
-		//objects separated
-
-	/*
-	* shallow contact generation
-	*/
 }
