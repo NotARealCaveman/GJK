@@ -15,14 +15,23 @@ const std::vector<MFpoint3> pointCloud
 
 int main()
 {
-	BoundingSphere boundingSphere{ .center = {0,1.0,0}, .radius = 1 };
+	BoundingSphere boundingSphere{ .center = {0,3.0,0}, .radius = 1 };
 	ConvexHull hull;
 	hull.worldSpace = Identity();		
 	hull.mesh = QuickHull(pointCloud);
 
 	Simplex_T<Support> simplex;
 	MFfloat distanceSquared;
-	const MFbool objectsSeparated{ GJK(boundingSphere.center,hull,simplex, distanceSquared) };
+	DLOG({ CONSOLE_BOLD }, "Beginning GJK Test with Sphere at:", boundingSphere.center, "and radius:", boundingSphere.radius, "and Hull at:", hull.worldSpace.GetTranslation());
+	const MFbool gjkResult{ GJK(boundingSphere.center,hull,simplex, distanceSquared) };
 
-	DLOG({ CONSOLE_BG_CYAN,CONSOLE_BLACK, CONSOLE_BOLD, CONSOLE_BLINK }, "objectsSeparated:", objectsSeparated, "distanceSquared:", distanceSquared);
+	if (gjkResult)
+	{
+		if (distanceSquared <= boundingSphere.radius * boundingSphere.radius)
+			DLOG({ CONSOLE_BG_GREEN,CONSOLE_BLACK, CONSOLE_BOLD, CONSOLE_BLINK }, "Shallow Contact Detected, distanceSquared:", distanceSquared);
+		else
+			DLOG({ CONSOLE_BG_RED,CONSOLE_BLACK, CONSOLE_BOLD, CONSOLE_BLINK }, "Separation Detected, distanceSquared:", distanceSquared);
+	}
+	else
+		DLOG({ CONSOLE_BG_RED,CONSOLE_BLACK, CONSOLE_BOLD, CONSOLE_BLINK }, "Deep Contact Detected");
 }
