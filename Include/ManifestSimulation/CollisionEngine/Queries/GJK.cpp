@@ -52,6 +52,10 @@ void Manifest_Simulation::CullSimplexVertices(Simplex_T<Support>& simplex, MFpoi
 		}
 		case 4:
 		{
+			//q lies within simplex - weights never computed after being set to 0(IEEE-754 guaranteed)
+			if (w0 + w1 + w2 + w3 == 0.0f)
+				return;
+
 			if (w0 <= 0.0f)
 			{
 				simplex = { simplex[1],simplex[2],simplex[3]};
