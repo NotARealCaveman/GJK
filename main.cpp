@@ -21,9 +21,8 @@ int main()
 	hull.mesh = QuickHull(pointCloud);
 
 	Simplex_T<Support> simplex;
-	MFpoint3 closestPoint;
 	MFfloat distanceSquared;
-	const MFbool objectsSeparated{ GJK(boundingSphere.center,hull,simplex, closestPoint,distanceSquared) };
+	const MFbool objectsSeparated{ GJK(boundingSphere.center,hull,simplex, distanceSquared) };
 
-	DLOG({ CONSOLE_BG_CYAN,CONSOLE_BLACK, CONSOLE_BOLD, CONSOLE_BLINK }, "objectsSeparated:", objectsSeparated, "closestPoint:", closestPoint, "distanceSquared:", distanceSquared);
+	DLOG({ CONSOLE_BG_CYAN,CONSOLE_BLACK, CONSOLE_BOLD, CONSOLE_BLINK }, "objectsSeparated:", objectsSeparated, "distanceSquared:", distanceSquared);
 }

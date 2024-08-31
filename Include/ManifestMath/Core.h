@@ -1,12 +1,12 @@
 #pragma once
 #include <iostream>
 #include <iomanip>
+#include <numeric>
 
 #include "Typenames.h"
 
 namespace Manifest_Math
 {
-
 	constexpr MFfloat Pi = 3.1415927f;
 	constexpr MFfloat Pi2 = Pi * 2.0f;
 	constexpr MFfloat EpsilonMax = 1.0f - std::numeric_limits<MFfloat>::epsilon();

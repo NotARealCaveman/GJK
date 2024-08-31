@@ -15,7 +15,7 @@ using namespace Manifest_Math;
 namespace Manifest_Simulation
 {
 	//remove vertices from simplex that do not contribute, internally updates closest point
-	void CullSimplexVertices(Simplex_T<Support>& simplex, MFpoint3& closestPoint);
+	const MFpoint3 CullSimplexVertices(Simplex_T<Support>& simplex);
 	//calls barycentric functions based on simplex degree
 	const MFpoint3 FindClosestPointOnSimplexFromOrigin(Simplex_T<Support>& simplex);
 	//returns search directions based on simplex degree
@@ -26,7 +26,7 @@ namespace Manifest_Simulation
 	const MFbool ContainsSupport(const Simplex_T<Support>& simplex, const Support& newPoint);
 	//returns true if collision not detected, stores closest point
 	template<typename Geometry>
-	MFbool GJK(const Geometry& geometry, const ConvexHull& hull, Simplex_T<Support>& simplex, MFpoint3& closestPoint, MFfloat& distance, MFvec3 direction = { 1,0,0 })
+	MFbool GJK(const Geometry& geometry, const ConvexHull& hull, Simplex_T<Support>& simplex, MFfloat& distance, MFvec3 direction = { 1,0,0 })
 	{
 		constexpr MFu32 ITERATION_LIMIT{ 10 };
 		distance = std::numeric_limits<MFfloat>::infinity();
@@ -38,7 +38,7 @@ namespace Manifest_Simulation
 				return true;// containment checked in prior iteration
 			//ensure new support point is always front
 			simplex.PushFront(support);
-			CullSimplexVertices(simplex, closestPoint);
+			const MFpoint3 closestPoint{ CullSimplexVertices(simplex) };
 			//exit false if origin found to be enclosed
 			if (ContainsOrigin(simplex))
 				return false;

@@ -6,80 +6,84 @@ using namespace Manifest_Simulation;
 //barycentric weights are set during closest point computation;
 //all negative weights are set to 0 allowing simplex culling to copy valid points
 //if a size change is detected the simplex was reduced
-void Manifest_Simulation::CullSimplexVertices(Simplex_T<Support>& simplex, MFpoint3& closestPoint)
+const MFpoint3 Manifest_Simulation::CullSimplexVertices(Simplex_T<Support>& simplex)
 {		
-	closestPoint = FindClosestPointOnSimplexFromOrigin(simplex);
+	const MFpoint3 result{ FindClosestPointOnSimplexFromOrigin(simplex) };
 	const MFfloat w0{ simplex[0].weight };
 	const MFfloat w1{ simplex[1].weight };
 	const MFfloat w2{ simplex[2].weight };
 	const MFfloat w3{ simplex[3].weight };
 	switch (simplex.Size())
 	{ 		
+		case 1:
+			return result;
 		case 2:
 		{
 			if (w0 <= 0.0f)
 			{
 				simplex = { simplex[1] };
-				return CullSimplexVertices(simplex, closestPoint);
+				return CullSimplexVertices(simplex);
 			}
 			else if (w1 <= 0.0f)
 			{
 				simplex = { simplex[0] };
-				return CullSimplexVertices(simplex, closestPoint);
+				return CullSimplexVertices(simplex);
 			}
 
-			return;
+			return result;
 		} 
 		case 3:
 		{
 			if (w0 <= 0.0f)
 			{
 				simplex = { simplex[1],simplex[2]};
-				return CullSimplexVertices(simplex, closestPoint);
+				return CullSimplexVertices(simplex);
 			}
 			else if (w1 <= 0.0f)
 			{
 				simplex = { simplex[0],simplex[2]};
-				return CullSimplexVertices(simplex, closestPoint);
+				return CullSimplexVertices(simplex);
 			}
 			else if (w2 <= 0.0f)
 			{
 				simplex = { simplex[0],simplex[1] };
-				return CullSimplexVertices(simplex, closestPoint);
+				return CullSimplexVertices(simplex);
 			}
 
-			return;
+			return result;
 		}
 		case 4:
 		{
 			//q lies within simplex - weights never computed after being set to 0(IEEE-754 guaranteed)
 			if (w0 + w1 + w2 + w3 == 0.0f)
-				return;
+				return result;//returns query point, is unused
 
 			if (w0 <= 0.0f)
 			{
 				simplex = { simplex[1],simplex[2],simplex[3]};
-				return CullSimplexVertices(simplex, closestPoint);
+				return CullSimplexVertices(simplex);
 			}
 			else if (w1 <= 0.0f)
 			{
 				simplex = { simplex[0],simplex[2],simplex[3] };
-				return CullSimplexVertices(simplex, closestPoint);
+				return CullSimplexVertices(simplex);
 			}
 			else if (w2 <= 0.0f)
 			{
 				simplex = { simplex[0],simplex[1],simplex[3] };
-				return CullSimplexVertices(simplex, closestPoint);
+				return CullSimplexVertices(simplex);
 			}
 			else if (w3 <= 0.0f)
 			{
 				simplex = { simplex[0],simplex[1],simplex[2] };
-				return CullSimplexVertices(simplex, closestPoint);
+				return CullSimplexVertices(simplex);
 			}
 
-			return;
+			return result;
 		}
 	}
+	//shouldn't happen
+	assert(0);
 }
 
 const MFpoint3 Manifest_Simulation::FindClosestPointOnSimplexFromOrigin(Simplex_T<Support>& simplex)
