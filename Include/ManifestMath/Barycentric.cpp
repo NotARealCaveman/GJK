@@ -14,7 +14,7 @@ MFpoint3 Manifest_Math::Barycentric(const MFpoint3& q, const MFpoint3& a, const 
 	const MFvec3 simplex{ b - a };
 	const MFfloat iMag{ 1.0f / Magnitude(simplex) };
 	const MFvec3 AQ{ q - a };
-	const MFvec3 QB{ b - a };
+	const MFvec3 QB{ b - q };
 	v = Dot(AQ, simplex * iMag) * iMag;
 	u = 1 - v;
 	assert(u + v > 0.99 && u + v < 1.1);
