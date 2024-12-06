@@ -39,11 +39,14 @@ namespace Manifest_Simulation
 			//ensure new support point is always front
 			simplex.PushFront(support);
 			const MFpoint3 closestPoint{ CullSimplexVertices(simplex) };
+			const MFfloat distanceSqaured{ Dot(closestPoint,closestPoint) };
 			//exit false if origin found to be enclosed
 			if (ContainsOrigin(simplex))
+			{
+				distance = distanceSqaured;
 				return false;
-			//ensure progress towards origin
-			const MFfloat distanceSqaured{ Dot(closestPoint,closestPoint) };
+			}
+			//ensure progress towards origin			
 			if (distanceSqaured >= distance)
 				return true;
 			//update serach direction and distance for next iteration
